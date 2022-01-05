@@ -7,8 +7,56 @@ A critical connection is a connection that, if removed, will make some servers u
 
 Return all critical connections in the network in any order.
 
+# Implementation 1 : Brute Force (Time Limit Exceeded)
+Remove each edge from the graph, and check if doing so divides the graph into multiple components using DFS.
 
-# Implementation :
+If removing an edge divides the graph into multiple components it means the edge is critical edge.
+
+Since `n - 1 <= connections.length <= 10^5`, this approach take lot of time and will result in Time Limit exceeded.
+
+```java
+class Solution {
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) { 
+        // find all critical edges
+
+       List<List<Integer>> result = new ArrayList<>();
+       for(int i = 0; i < connections.size(); i++) {
+           // treat the graph as connections.get(i) edge is not present
+           int skipConnection = i;
+           Map<Integer,List<Integer>> graph = new HashMap<>();
+           for(int j = 0; j < connections.size(); j++) {
+               if(j != skipConnection) {
+                   List<Integer> edge = connections.get(j);
+                   graph.putIfAbsent(edge.get(0), new ArrayList<Integer>());
+                   graph.putIfAbsent(edge.get(1), new ArrayList<Integer>());
+                   graph.get(edge.get(0)).add(edge.get(1));
+                   graph.get(edge.get(1)).add(edge.get(0));
+               }
+           }
+           Set<Integer> visited = new HashSet<Integer>();
+           dfs(0,graph,visited);
+           if(visited.size() != n)
+             result.add(connections.get(i));
+       } 
+       return result;     
+    }
+                                                   
+    private void dfs(int vertex, Map<Integer, List<Integer>> graph, Set<Integer> visited) {
+        if(!visited.contains(vertex))
+            visited.add(vertex);
+        // call dfs from neighboring vertices
+        List<Integer> neighbors = graph.get(vertex);
+        if(neighbors != null) {
+            for(int neighbor : neighbors) {
+                if(!visited.contains(neighbor))
+                dfs(neighbor, graph, visited);
+            }
+        }    
+    }
+}
+```
+
+# Implementation 2 : Tarjan's Algorithm
 ```java
 class Solution {
     int time = -1;
@@ -73,3 +121,8 @@ class Solution {
     }
 }
 ```
+
+# References :
+1. Tarjan's Algorithm : https://www.youtube.com/watch?v=RYaakWv5m6o
+
+
