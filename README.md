@@ -1,11 +1,18 @@
 # Critical connections in a network
 ## https://leetcode.com/problems/critical-connections-in-a-network/
 
-There are n servers numbered from 0 to n - 1 connected by undirected server-to-server connections forming a network where connections[i] = [ai, bi] represents a connection between servers ai and bi. Any server can reach other servers directly or indirectly through the network.
+There are n servers numbered from 0 to n - 1 connected by undirected server-to-server connections forming a network where connections[i] = [ai, bi] represents a connection between servers ai and bi. 
+
+**Any server can reach other servers directly or indirectly through the network.**
 
 A critical connection is a connection that, if removed, will make some servers unable to reach some other server.
 
 Return all critical connections in the network in any order.
+
+## Note : Important
+We are given in the question that any server can reach any other servers directly or indirectly through the network, which means given graph is one single connected component.
+
+The graph does not have disconnected components.
 
 # Implementation 1 : Brute Force (Time Limit Exceeded)
 Remove each edge from the graph, and check if doing so divides the graph into multiple components using DFS.
